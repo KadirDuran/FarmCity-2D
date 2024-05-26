@@ -133,7 +133,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94b0e1ecb20a2de4db9a5d65f76fabc7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stand: {fileID: 0}
-  orderPanel: {fileID: 0}
-  txtEgg: {fileID: 0}
-  txtMilk: {fileID: 0}
+  leftPoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  rightPoints: []

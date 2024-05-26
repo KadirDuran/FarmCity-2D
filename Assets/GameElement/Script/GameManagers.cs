@@ -6,6 +6,7 @@ using UnityEngine;
 public class GameManagers : MonoBehaviour
 {
     public GameObject orderPanel,prefabCustomer,cameras;
+    public List<Transform> leftPoints, rightPoints, turnPoints;
     public Transform stand;
     public TextMeshProUGUI txtEgg, txtMilk;
 
@@ -15,8 +16,7 @@ public class GameManagers : MonoBehaviour
     void Start()
     {
         LoadPlayerData();
-        CustomerCreate();
-        PlayerPrefs.SetInt("CoinCount", 1000000);
+        InvokeRepeating("CustomerCreate",3f,5f);
 
     }
    
@@ -41,11 +41,12 @@ public class GameManagers : MonoBehaviour
     }
     void CustomerCreate()
     {
-        Customer customer = Instantiate(prefabCustomer, new Vector2(1f, 3f), Quaternion.identity).GetComponent<Customer>();
-        customer.orderPanel = orderPanel;
-        customer.txtEgg = txtEgg;
-        customer.txtMilk = txtMilk;
-        customer.stand = stand;
+       GameObject obj = Instantiate(prefabCustomer, new Vector2(0f, -5f), Quaternion.identity);
+        obj.GetComponent<Customer>().leftPoints = leftPoints;
+        obj.GetComponent<Customer>().rightPoints = rightPoints;
+        obj.GetComponent<Customer>().turnPoints = turnPoints;
+        obj.GetComponent<Customer>().gameManagers = GetComponent<GameManagers>();
+       
         
     }
 
