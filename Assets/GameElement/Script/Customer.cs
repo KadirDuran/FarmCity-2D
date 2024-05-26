@@ -9,73 +9,93 @@ public class Customer : MonoBehaviour
 {
     public List<Transform> leftPoints, rightPoints,turnPoints;
     public GameManagers gameManagers;
+    public GameObject gmPlayer;
     Transform target;
     public bool egg = false, milk = false, turns=false;
     public int pointCount = 0;
     int eggPrice=5, milkPrice = 5;
+    Animation idle, run;
+    public GameObject panel;
+    public TextMeshProUGUI txtMessage;
 
     void Start()
     {
+       
         if (UnityEngine.Random.Range(0, 100) % 2 == 0)
         {
             egg = true;
             milk = false;
+            gmPlayer.gameObject.transform.Rotate(0f, 180f, 0f);
+
         }
         else
         {
             egg = false;
             milk = true;
+            gmPlayer.gameObject.transform.Rotate(0f, 0f, 0f);
         }
     }
     void Buy(string key)
     {
+        gameObject.GetComponent<Animator>().SetBool("isRun", true);
         if (key=="E")
         {
-            int egg = UnityEngine.Random.Range(0, int.Parse(math.floor(PlayerPrefs.GetInt("EggCount") * 0.15f).ToString()));
+            int egg = UnityEngine.Random.Range(0, int.Parse(math.floor(PlayerPrefs.GetInt("EggCount") * 0.015f).ToString()));
             if(egg>1)
             {
                 PlayerPrefs.SetInt("EggCount", PlayerPrefs.GetInt("EggCount")-egg);
                 PlayerPrefs.SetInt("CoinCount", PlayerPrefs.GetInt("CoinCount")+(egg*eggPrice));
-                Debug.Log("Merhabalar," + egg + " tane yumurta aldým. Ödeme tamamlandý.");
-            }else if(PlayerPrefs.GetInt("EggCount")>0)
+                txtMessage.text = "+Merhabalar," + egg + " tane yumurta aldým. \n-Ödeme tamamlandý.Ýyi günler :)";
+            }
+            else if(PlayerPrefs.GetInt("EggCount")>0)
             {
-                PlayerPrefs.SetInt("CoinCount", PlayerPrefs.GetInt("CoinCount") + (PlayerPrefs.GetInt("EggCount") * eggPrice));
-                PlayerPrefs.SetInt("EggCount", 0);
-
+                int a = UnityEngine.Random.Range(0, PlayerPrefs.GetInt("EggCount"));
+                txtMessage.text = "+Merhabalar," + a + " tane yumurta aldým.\n-Ödeme tamamlandý.Ýyi günler :)";
+                PlayerPrefs.SetInt("CoinCount", PlayerPrefs.GetInt("CoinCount") + (a * eggPrice));
+                PlayerPrefs.SetInt("EggCount", PlayerPrefs.GetInt("EggCount")-a);
             }
             else
             {
-                Debug.Log("Merhabalar, yumurtanýz kalmamýþ. Bu nasýl bakkal?");
+                txtMessage.text = "Merhabalar, yumurtanýz kalmamýþ. Bu nasýl dükkan?";
             }
-           
+            gmPlayer.gameObject.transform.Rotate(0f, 180f, 0f);
+
         }
         else
         {
-            int milk = UnityEngine.Random.Range(0, int.Parse(math.floor(PlayerPrefs.GetInt("MilkCount") * 0.15f).ToString()));
+            int milk = UnityEngine.Random.Range(0, int.Parse(math.floor(PlayerPrefs.GetInt("MilkCount") * 0.015f).ToString()));
             if (milk > 1)
             {
                 PlayerPrefs.SetInt("MilkCount", PlayerPrefs.GetInt("MilkCount") - milk);
                 PlayerPrefs.SetInt("CoinCount", PlayerPrefs.GetInt("CoinCount") + (milk * milkPrice));
-                Debug.Log("Merhabalar," + milk + " tane süt aldým. Ödeme tamamlandý.");
+                txtMessage.text = "+Merhabalar," + milk + " tane süt aldým.\n-Ödeme tamamlandý.Ýyi günler :)";
             }
             else if (PlayerPrefs.GetInt("MilkCount") > 0)
             {
-                PlayerPrefs.SetInt("CoinCount", PlayerPrefs.GetInt("CoinCount") + (PlayerPrefs.GetInt("MilkCount") * milk));
-                PlayerPrefs.SetInt("MilkCount", 0);
+                int a = UnityEngine.Random.Range(0, PlayerPrefs.GetInt("MilkCount"));
+                txtMessage.text = "+Merhabalar," + a + " tane süt aldým.\n-Ödeme tamamlandý.Ýyi günler :)";
+                PlayerPrefs.SetInt("CoinCount", PlayerPrefs.GetInt("CoinCount") + (a * milkPrice));
+                PlayerPrefs.SetInt("MilkCount", PlayerPrefs.GetInt("MilkCount")-a);
 
             }
             else
             {
-                Debug.Log("Merhabalar, sütünüz kalmamýþ. Bu nasýl bakkal?");
+                txtMessage.text  = "Merhabalar, sütünüz kalmamýþ. Bu nasýl dükkan?";
             }
+            gmPlayer.gameObject.transform.Rotate(0f, 180f, 0f);
+
         }
 
         gameManagers.LoadPlayerData();
-        Invoke("TurnBack", 1f);
+        panel.gameObject.SetActive(true);
+        Invoke("TurnBack", 3f);
     }
     void TurnBack()
     {
+        gameObject.GetComponent<Animator>().SetBool("isRun", false);
+        
         turns = true;
+        panel.gameObject.SetActive(false);
     }
     void Update()
     {
@@ -83,6 +103,7 @@ public class Customer : MonoBehaviour
         {
             Transform t = rightPoints[pointCount];
             transform.position = Vector3.MoveTowards(transform.position, t.position, 2f * Time.deltaTime);
+            
             if (transform.position == t.position)
             {
                 pointCount++;
@@ -99,6 +120,8 @@ public class Customer : MonoBehaviour
         if (egg)
         {
             Transform t = leftPoints[pointCount];
+
+           
             transform.position = Vector3.MoveTowards(transform.position, t.position, 2f * Time.deltaTime);
             if (transform.position == t.position)
             {

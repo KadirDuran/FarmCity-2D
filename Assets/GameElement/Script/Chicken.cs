@@ -20,7 +20,7 @@ public class Chicken : MonoBehaviour
     }
     void LayEggs()
     {
-        eggCount++;
+        eggCount+=10;
         spEgg.SetActive(true);
 
     }

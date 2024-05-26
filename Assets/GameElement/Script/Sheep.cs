@@ -20,7 +20,7 @@ public class Sheep : MonoBehaviour
     }
     void LayMilk()
     {
-        milkCount++;
+        milkCount+=15;
         spMilk.SetActive(true);
 
     }
